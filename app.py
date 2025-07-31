@@ -134,14 +134,14 @@ with tab2:
     if csv_file:
         df = pd.read_csv(csv_file)
 
-        if "clean_text" not in df.columns:
+        if "text" not in df.columns:
             st.error("❌ The uploaded file must contain a 'clean_text' column.")
         else:
             st.success("✅ File loaded successfully!")
 
             # Extract from cleaned_text
-            df["extracted_email"] = df["clean_text"].apply(extract_email)
-            df["extracted_phone"] = df["clean_text"].apply(extract_phone)
+            df["extracted_email"] = df["text"].apply(extract_email)
+            df["extracted_phone"] = df["text"].apply(extract_phone)
 
             st.markdown("### 🔎 Preview Extracted Data")
             st.dataframe(df[["filename", "designation", "extracted_email", "extracted_phone"]].head(10))
