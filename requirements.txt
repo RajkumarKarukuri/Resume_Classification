@@ -1,6 +1,6 @@
 streamlit
+scikit-learn
 joblib
 python-docx
 PyMuPDF
-scikit-learn
-pandas
+xgboost
