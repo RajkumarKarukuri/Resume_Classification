@@ -1,16 +1,30 @@
 import streamlit as st
 import joblib
-import fitz  # PyMuPDF
+import fitz
 from docx import Document
 
-# Load vectorizer and model
+# Load shared components
 vectorizer = joblib.load("resume_vectorizer.pkl")
-model = joblib.load("resume_classifier.pkl")
+label_encoder = joblib.load("label_encoder.pkl")
 
+# Load all models into a dictionary
+models = {
+    "Logistic Regression": joblib.load("logistic_model.pkl"),
+    "Naive Bayes": joblib.load("naive_bayes_model.pkl"),
+    "Random Forest": joblib.load("random_forest_model.pkl"),
+    "SVM": joblib.load("svm_model.pkl"),
+    "XGBoost": joblib.load("xgboost_model.pkl")
+}
+
+# App layout
 st.set_page_config(page_title="Resume Classifier", layout="wide")
-st.title("📄 Resume Classifier App")
+st.title("🧠 Multi-Model Resume Classifier")
 
-# Functions to extract text
+# Model selector
+selected_model_name = st.selectbox("Choose a model for prediction:", list(models.keys()))
+selected_model = models[selected_model_name]
+
+# Extractor functions
 def extract_text_from_pdf(file):
     text = ""
     with fitz.open(stream=file.read(), filetype="pdf") as doc:
@@ -22,31 +36,29 @@ def extract_text_from_docx(file):
     doc = Document(file)
     return "\n".join([para.text for para in doc.paragraphs])
 
-# File Upload
-uploaded_file = st.file_uploader("📤 Upload Resume (.pdf or .docx)", type=["pdf", "docx"])
+# File upload
+uploaded_file = st.file_uploader("Upload resume (.pdf or .docx)", type=["pdf", "docx"])
 resume_text = ""
 
 if uploaded_file:
-    file_type = uploaded_file.name.split(".")[-1].lower()
-    if file_type == "pdf":
+    ext = uploaded_file.name.split(".")[-1].lower()
+    if ext == "pdf":
         resume_text = extract_text_from_pdf(uploaded_file)
-    elif file_type == "docx":
+    elif ext == "docx":
         resume_text = extract_text_from_docx(uploaded_file)
-    else:
-        st.error("❌ Unsupported file type.")
+    st.success("Resume text extracted!")
 
-    st.success("✅ Resume text extracted!")
-
-# Optional: manual text input
+# Text input (manual option)
 st.markdown("---")
-st.write("Or paste your resume content here 👇")
-text_input = st.text_area("✍️ Paste Resume Text Here", value=resume_text, height=300)
+st.write("Or paste resume text manually:")
+manual_text = st.text_area("Paste resume content here:", value=resume_text, height=300)
 
-# Prediction
+# Predict
 if st.button("🔍 Predict Job Role"):
-    if not text_input.strip():
-        st.warning("Please enter or upload resume text.")
+    if not manual_text.strip():
+        st.warning("Please enter resume text.")
     else:
-        vec = vectorizer.transform([text_input])
-        prediction = model.predict(vec)[0]
-        st.success(f"🧠 Predicted Job Role: **{prediction}**")
+        vec = vectorizer.transform([manual_text])
+        prediction = selected_model.predict(vec)
+        predicted_label = label_encoder.inverse_transform(prediction)[0]
+        st.success(f"🎯 Predicted Job Role ({selected_model_name}): **{predicted_label}**")
