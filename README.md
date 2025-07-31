@@ -15,7 +15,7 @@ This Streamlit app classifies resumes into job roles using multiple machine lear
 
 ## 🚀 Try the App
 
-**Live App:** [Click here to open]([https://your-app-link.streamlit.app](https://resumeclassification-ulxbh59efv3yyvxw29bk9m.streamlit.app/))
+**Live App:** [Click here to open]([https://your-app-link.streamlit.app](https://resumeclassification-ulxbh59efv3yyvxw29bk9m.streamlit.app/)
 
 ## 📂 Files in this repo
 
