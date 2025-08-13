@@ -118,12 +118,30 @@ with tab1:
             🛠️ Skills: {skills}
             """
 
+            import io
+
+            # Create a dataframe for the report
+            report_df = pd.DataFrame({
+                "Predicted Role": [predicted_label],
+                "Model Used": [selected_model_name],
+                "Email": [email],
+                "Phone": [phone],
+                "Skills": [skills]
+            })
+
+            # Save to an Excel file in memory
+            excel_buffer = io.BytesIO()
+            with pd.ExcelWriter(excel_buffer, engine="xlsxwriter") as writer:
+                 report_df.to_excel(writer, index=False, sheet_name="Report")
+
+            # Excel download button
             st.download_button(
-                label="📥 Download Report",
-                data=report,
-                file_name="resume_report.txt",
-                mime="text/plain"
-            )
+                 label="📥 Download Report (Excel)",
+                 data=excel_buffer.getvalue(),
+                 file_name="resume_report.xlsx",
+                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+             )
+
 
 # ------------------------- TAB 2: CSV Upload -------------------------
 with tab2:
