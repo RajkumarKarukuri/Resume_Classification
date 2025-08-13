@@ -4,6 +4,10 @@ import fitz  # PyMuPDF
 from docx import Document
 import pandas as pd
 import re
+import io
+import xlsxwriter
+print(xlsxwriter.__version__)
+
 
 # ------------------------- Load Components -------------------------
 vectorizer = joblib.load("resume_vectorizer.pkl")
@@ -117,8 +121,6 @@ with tab1:
             📱 Phone: {phone}
             🛠️ Skills: {skills}
             """
-
-            import io
 
             # Create a dataframe for the report
             report_df = pd.DataFrame({
