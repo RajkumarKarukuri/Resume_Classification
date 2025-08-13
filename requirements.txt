@@ -1,6 +1,9 @@
 streamlit
-scikit-learn
+pandas
+numpy
 joblib
 python-docx
 PyMuPDF
+xlsxwriter
+scikit-learn
 xgboost
