@@ -6,7 +6,6 @@ import pandas as pd
 import re
 import io
 import xlsxwriter
-print(xlsxwriter.__version__)
 
 
 # ------------------------- Load Components -------------------------
