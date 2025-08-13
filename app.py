@@ -5,7 +5,6 @@ from docx import Document
 import pandas as pd
 import re
 import io
-import xlsxwriter
 
 
 # ------------------------- Load Components -------------------------
